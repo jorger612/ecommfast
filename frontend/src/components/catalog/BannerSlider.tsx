@@ -54,8 +54,9 @@ function BannerSlide({ banner }: { banner: Banner }) {
         alt={banner.title}
         className="w-full h-full object-cover"
       />
-      <div className="absolute inset-0 bg-gradient-to-r from-black/40 to-transparent flex items-center px-10">
-        <h2 className="text-white text-2xl sm:text-4xl font-bold drop-shadow">
+      <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/20 to-transparent flex items-end pb-8 px-10">
+        <h2 className="text-white text-xl sm:text-3xl font-bold leading-tight"
+            style={{ textShadow: '0 2px 8px rgba(0,0,0,0.6)' }}>
           {banner.title}
         </h2>
       </div>
