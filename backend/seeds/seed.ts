@@ -355,7 +355,7 @@ const BANNERS: BannerSeed[] = [
 
 // ─── Admin user seed ──────────────────────────────────────────────────────────
 // Contraseña: Admin1234! (bcrypt hash generado con salt 12)
-const ADMIN_HASH = '$2b$12$LQv3c1yqBWVHxkd0LHAkCOYz6TiGqTgJZB5Q6pQ1D7U9h0QW1L6Hy';
+const ADMIN_HASH = '$2b$12$pBDh.Hir0WiygeBpd0vQieWjJYm9r10HknFeCEsMuGCP7/5b3gBpK';
 
 // ─── Runner ───────────────────────────────────────────────────────────────────
 async function seed() {
