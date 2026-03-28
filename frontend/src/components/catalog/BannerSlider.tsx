@@ -19,7 +19,7 @@ export function BannerSlider() {
 
   return (
     <div className="relative rounded-2xl overflow-hidden shadow-card">
-      {/* Embla viewport */}
+      {/* Embla viewport — ref va aquí, NO en el wrapper externo */}
       <div className="overflow-hidden" ref={emblaRef}>
         <div className="flex">
           {banners.map((banner) => (
@@ -27,9 +27,8 @@ export function BannerSlider() {
           ))}
         </div>
       </div>
-      </div>
 
-      {/* Dot navigation */}
+      {/* Dot navigation — dentro del wrapper externo para posicionamiento absoluto */}
       <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
         {banners.map((_, idx) => (
           <button
@@ -46,19 +45,24 @@ export function BannerSlider() {
 
 function BannerSlide({ banner }: { banner: Banner }) {
   const content = (
-    <div className="relative aspect-[16/5] bg-surface" style={{ flex: '0 0 100%', minWidth: '0' }}>
+    <div
+      className="relative aspect-[16/5] bg-surface"
+      style={{ flex: '0 0 100%', minWidth: '0' }}
+    >
       <img
         src={banner.image_url}
         alt={banner.title}
         className="w-full h-full object-cover"
       />
       <div className="absolute inset-0 bg-gradient-to-r from-black/40 to-transparent flex items-center px-10">
-        <h2 className="text-white text-2xl sm:text-4xl font-bold drop-shadow">{banner.title}</h2>
+        <h2 className="text-white text-2xl sm:text-4xl font-bold drop-shadow">
+          {banner.title}
+        </h2>
       </div>
     </div>
   );
 
   return banner.link_url
     ? <Link to={banner.link_url}>{content}</Link>
-    : <div>{content}</div>;
+    : <>{content}</>;
 }
