@@ -1,0 +1,24 @@
+version: '3.9'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: ecommfast_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ecommfast
+      POSTGRES_USER: ecommfast_user
+      POSTGRES_PASSWORD: ecommfast_secret
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./backend/migrations:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U ecommfast_user -d ecommfast']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:
