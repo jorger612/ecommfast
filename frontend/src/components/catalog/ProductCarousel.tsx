@@ -15,16 +15,19 @@ export function ProductCarousel({ products }: Props) {
   if (products.length === 0) return null;
 
   return (
-    <section className="overflow-hidden rounded-2xl" ref={emblaRef}>
-      <div className="flex gap-4">
+    <section className="overflow-hidden">
+      <div className="overflow-hidden" ref={emblaRef}>
+        <div className="flex gap-4">
         {products.map((product) => (
           <div
             key={product.id}
-            className="flex-none w-64 sm:w-72"
+            style={{ flex: '0 0 auto' }}
+            className="w-64 sm:w-72"
           >
             <ProductCard product={product} />
           </div>
         ))}
+        </div>
       </div>
     </section>
   );

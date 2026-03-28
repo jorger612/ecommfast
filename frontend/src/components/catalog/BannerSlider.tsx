@@ -11,18 +11,22 @@ export function BannerSlider() {
     staleTime: 5 * 60_000,
   });
 
-  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true }, [
+  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true, dragFree: false }, [
     Autoplay({ delay: 5000, stopOnInteraction: false }),
   ]);
 
   if (banners.length === 0) return null;
 
   return (
-    <div className="relative rounded-2xl overflow-hidden shadow-card" ref={emblaRef}>
-      <div className="flex">
-        {banners.map((banner) => (
-          <BannerSlide key={banner.id} banner={banner} />
-        ))}
+    <div className="relative rounded-2xl overflow-hidden shadow-card">
+      {/* Embla viewport */}
+      <div className="overflow-hidden" ref={emblaRef}>
+        <div className="flex">
+          {banners.map((banner) => (
+            <BannerSlide key={banner.id} banner={banner} />
+          ))}
+        </div>
+      </div>
       </div>
 
       {/* Dot navigation */}
@@ -42,7 +46,7 @@ export function BannerSlider() {
 
 function BannerSlide({ banner }: { banner: Banner }) {
   const content = (
-    <div className="relative flex-none w-full aspect-[16/5] bg-surface">
+    <div className="relative aspect-[16/5] bg-surface" style={{ flex: '0 0 100%', minWidth: '0' }}>
       <img
         src={banner.image_url}
         alt={banner.title}
