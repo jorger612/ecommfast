@@ -89,7 +89,16 @@ adminRouter.patch('/products/:id', validate(productSchema.partial()), async (req
   res.json({ data: rows[0] });
 });
 
+adminRouter.delete('/products/:id', async (req: Request, res: Response): Promise<void> => {
+  await pool.query(`DELETE FROM products WHERE id = $1`, [req.params.id]);
+  res.status(204).send();
+});
+
 // ─── CATEGORIES ADMIN ─────────────────────────────────────────────────────────
+adminRouter.get('/categories', async (_req: Request, res: Response): Promise<void> => {
+  const { rows } = await pool.query(`SELECT * FROM categories ORDER BY sort_order ASC, name ASC`);
+  res.json({ data: rows });
+});
 const categorySchema = z.object({
   name:        z.string().min(1).trim(),
   slug:        z.string().min(1).trim(),
@@ -122,7 +131,16 @@ adminRouter.patch('/categories/:id', validate(categorySchema.partial()), async (
   res.json({ data: rows[0] });
 });
 
+adminRouter.delete('/categories/:id', async (req: Request, res: Response): Promise<void> => {
+  await pool.query(`DELETE FROM categories WHERE id = $1`, [req.params.id]);
+  res.status(204).send();
+});
+
 // ─── BANNERS ADMIN ────────────────────────────────────────────────────────────
+adminRouter.get('/banners', async (_req: Request, res: Response): Promise<void> => {
+  const { rows } = await pool.query(`SELECT * FROM banners ORDER BY sort_order ASC, created_at DESC`);
+  res.json({ data: rows });
+});
 const bannerSchema = z.object({
   title:      z.string().min(1).trim(),
   image_url:  z.string().url(),
@@ -141,6 +159,24 @@ adminRouter.post('/banners', validate(bannerSchema), async (req: Request, res: R
     [title, image_url, link_url ?? null, start_date, end_date, is_active, sort_order],
   );
   res.status(201).json({ data: rows[0] });
+});
+
+adminRouter.patch('/banners/:id', validate(bannerSchema.partial()), async (req: Request, res: Response): Promise<void> => {
+  const body = req.body as Partial<z.infer<typeof bannerSchema>>;
+  const fields: string[] = [];
+  const values: unknown[] = [];
+  for (const [key, val] of Object.entries(body)) {
+    if (val !== undefined) fields.push(`${key} = $${values.push(val)}`);
+  }
+  if (fields.length === 0) { res.status(400).json({ error: 'NO_FIELDS' }); return; }
+  values.push(req.params.id);
+  const { rows } = await pool.query(`UPDATE banners SET ${fields.join(', ')} WHERE id = $${values.length} RETURNING *`, values);
+  res.json({ data: rows[0] });
+});
+
+adminRouter.delete('/banners/:id', async (req: Request, res: Response): Promise<void> => {
+  await pool.query(`DELETE FROM banners WHERE id = $1`, [req.params.id]);
+  res.status(204).send();
 });
 
 // ─── INVENTORY LOGS ───────────────────────────────────────────────────────────
