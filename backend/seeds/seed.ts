@@ -335,19 +335,19 @@ interface BannerSeed {
 const BANNERS: BannerSeed[] = [
   {
     title: 'Semana de Electrónica — Hasta 20% OFF',
-    image_url: 'https://placehold.co/1200x300/4f46e5/ffffff?text=Semana+de+Electr%C3%B3nica',
+    image_url: 'https://placehold.co/1200x300/4f46e5/4f46e5',
     link_url: '/?category_slug=electronica',
     start_date: '2026-03-01', end_date: '2026-04-30', sort_order: 1,
   },
   {
     title: 'Nueva Colección Primavera-Verano 2026',
-    image_url: 'https://placehold.co/1200x300/f59e0b/ffffff?text=Colecci%C3%B3n+PV+2026',
+    image_url: 'https://placehold.co/1200x300/f59e0b/f59e0b',
     link_url: '/?category_slug=ropa',
     start_date: '2026-03-15', end_date: '2026-06-30', sort_order: 2,
   },
   {
     title: 'Deporte y Bienestar — Empieza hoy',
-    image_url: 'https://placehold.co/1200x300/10b981/ffffff?text=Deporte+y+Bienestar',
+    image_url: 'https://placehold.co/1200x300/10b981/10b981',
     link_url: '/?category_slug=deportes',
     start_date: '2026-01-01', end_date: '2026-12-31', sort_order: 3,
   },
