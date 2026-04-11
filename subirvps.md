@@ -159,7 +159,7 @@ openssl rand -base64 48
 cd /home/usuario/ecommfast
 
 # Construir imágenes y levantar en segundo plano
-docker compose -f docker-compose.prod.yml up -d --build
+docker compose --env-file .env.prod -f docker-compose.prod.yml up -d --build
 ```
 
 Esto ejecuta en orden:
@@ -173,14 +173,14 @@ Esto ejecuta en orden:
 
 ```bash
 # Ver estado de los contenedores
-docker compose -f docker-compose.prod.yml ps
+docker compose --env-file .env.prod -f docker-compose.prod.yml ps
 
 # Ver logs en tiempo real (todos los servicios)
-docker compose -f docker-compose.prod.yml logs -f
+docker compose --env-file .env.prod -f docker-compose.prod.yml logs -f
 
 # Ver logs de un servicio específico
-docker compose -f docker-compose.prod.yml logs -f backend
-docker compose -f docker-compose.prod.yml logs -f postgres
+docker compose --env-file .env.prod -f docker-compose.prod.yml logs -f backend
+docker compose --env-file .env.prod -f docker-compose.prod.yml logs -f postgres
 
 # Verificar conectividad interna
 docker exec ecommfast_backend wget -qO- http://localhost:3001/api/health || echo "Sin /health endpoint"
@@ -197,7 +197,7 @@ docker exec ecommfast_backend wget -qO- http://localhost:3001/api/health || echo
 sudo apt install -y certbot
 
 # Detener el contenedor frontend para liberar el puerto 80
-docker compose -f docker-compose.prod.yml stop frontend
+docker compose --env-file .env.prod -f docker-compose.prod.yml stop frontend
 
 # Obtener certificado SSL
 sudo certbot certonly --standalone -d tudominio.com -d www.tudominio.com
@@ -223,10 +223,10 @@ cd /home/usuario/ecommfast
 git pull origin main
 
 # Reconstruir imágenes y reiniciar (sin downtime en DB)
-docker compose -f docker-compose.prod.yml up -d --build --no-deps backend frontend
+docker compose --env-file .env.prod -f docker-compose.prod.yml up -d --build --no-deps backend frontend
 
 # O reconstruir todo
-docker compose -f docker-compose.prod.yml up -d --build
+docker compose --env-file .env.prod -f docker-compose.prod.yml up -d --build
 ```
 
 ---
@@ -235,13 +235,13 @@ docker compose -f docker-compose.prod.yml up -d --build
 
 ```bash
 # Detener todos los contenedores
-docker compose -f docker-compose.prod.yml down
+docker compose --env-file .env.prod -f docker-compose.prod.yml down
 
 # Detener y borrar volúmenes (⚠️ BORRA LA BASE DE DATOS)
-docker compose -f docker-compose.prod.yml down -v
+docker compose --env-file .env.prod -f docker-compose.prod.yml down -v
 
 # Reiniciar un servicio específico
-docker compose -f docker-compose.prod.yml restart backend
+docker compose --env-file .env.prod -f docker-compose.prod.yml restart backend
 
 # Entrar al contenedor de backend
 docker exec -it ecommfast_backend sh
