@@ -1,0 +1,77 @@
+# ══════════════════════════════════════════════════════
+#  EcommFast — Docker Compose PRODUCCIÓN
+# ══════════════════════════════════════════════════════
+#
+#  Uso:
+#    docker compose -f docker-compose.prod.yml up -d --build
+#
+#  Requiere el archivo .env.prod en la misma carpeta.
+# ══════════════════════════════════════════════════════
+
+services:
+
+  # ── Base de Datos ────────────────────────────────────
+  postgres:
+    image: postgres:15-alpine
+    container_name: ecommfast_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    networks:
+      - ecommfast_net
+
+  # ── Backend (Node.js / Express) ──────────────────────
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+      target: production
+    container_name: ecommfast_backend
+    restart: unless-stopped
+    env_file:
+      - .env.prod
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - ecommfast_net
+    # Puerto NO expuesto al host; solo accesible via Nginx interno
+
+  # ── Frontend (React + Vite → Nginx) ─────────────────
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      target: production
+    container_name: ecommfast_frontend
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    networks:
+      - ecommfast_net
+
+# ── Volúmenes ────────────────────────────────────────
+volumes:
+  postgres_data:
+    name: ecommfast_postgres_data
+
+# ── Red Interna ──────────────────────────────────────
+networks:
+  ecommfast_net:
+    driver: bridge
+    name: ecommfast_net
